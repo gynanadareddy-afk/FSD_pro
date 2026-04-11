@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Responsive Feature Section</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+/* Reset and Base Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8fafc;
+    color: #1e293b;
+    line-height: 1.6;
+}
+
+/* Feature Section Container */
+.feature-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    padding: 80px 40px;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+/* Responsive Stacking */
+@media (max-width: 992px) {
+    .feature-section {
+        grid-template-columns: 1fr;
+        padding: 60px 20px;
+        gap: 40px;
+    }
+}
+
+/* Left Content Area */
+.feature-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.feature-heading {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.2;
+}
+
+.feature-description {
+    font-size: 1.125rem;
+    color: #475569;
+}
+
+/* Feature Tags */
+.feature-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.tag {
+    background-color: #e2e8f0;
+    color: #334155;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.tag:hover {
+    background-color: #cbd5e1;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Right Content Area - Carousel */
+.carousel-container {
+    position: relative;
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+    aspect-ratio: 4/3;
+    background-color: #e2e8f0;
+}
+
+.carousel-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    pointer-events: none;
+}
+
+.carousel-slide.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Carousel Navigation Buttons */
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.carousel-btn:hover {
+    background: white;
+    transform: translateY(-50%) scale(1.05);
+}
+
+.carousel-btn.prev {
+    left: 16px;
+}
+
+.carousel-btn.next {
+    right: 16px;
+}
+
+.carousel-btn svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: #0f172a;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* Dots Navigation */
+.carousel-dots {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.dot.active {
+    background: white;
+    transform: scale(1.2);
+}
+</style>
+</head>
+<body>
+
+<section class="feature-section">
+    <div class="feature-content">
+        <h2 class="feature-heading">Seamless Integration for Your Workflow</h2>
+        <p class="feature-description">
+            Experience unparalleled productivity with our beautifully crafted features. 
+            Designed to integrate perfectly into your daily life, enabling you to focus on what matters most.
+        </p>
+        <div class="feature-tags">
+            <span class="tag">Responsive Grid</span>
+            <span class="tag">Modern UI</span>
+            <span class="tag">Smooth Animation</span>
+            <span class="tag">Accessible</span>
+        </div>
+    </div>
+
+    <div class="carousel-container">
+        <!-- Slides -->
+        <div class="carousel-slide active">
+            <img src="C:/Users/Saira/.gemini/antigravity/brain/031cb5a6-ed9d-4843-928f-b88f040055fa/carousel_image_1_1775929904993.png" alt="Workspace view">
+        </div>
+        <div class="carousel-slide">
+            <img src="C:/Users/Saira/.gemini/antigravity/brain/031cb5a6-ed9d-4843-928f-b88f040055fa/carousel_image_2_1775929921902.png" alt="Team meeting">
+        </div>
+        <div class="carousel-slide">
+            <img src="C:/Users/Saira/.gemini/antigravity/brain/031cb5a6-ed9d-4843-928f-b88f040055fa/carousel_image_3_1775929939080.png" alt="Analytics">
+        </div>
+
+        <!-- Navigation Buttons -->
+        <button class="carousel-btn prev" aria-label="Previous slide">
+            <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="carousel-btn next" aria-label="Next slide">
+            <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+
+        <!-- Dots -->
+        <div class="carousel-dots">
+            <div class="dot active" data-index="0"></div>
+            <div class="dot" data-index="1"></div>
+            <div class="dot" data-index="2"></div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const slides = document.querySelectorAll('.carousel-slide');
+        const dots = document.querySelectorAll('.dot');
+        const prevBtn = document.querySelector('.carousel-btn.prev');
+        const nextBtn = document.querySelector('.carousel-btn.next');
+        let currentIndex = 0;
+        const totalSlides = slides.length;
+
+        function updateCarousel(index) {
+            // Remove active class from all
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+
+            // Add active class to current
+            slides[index].classList.add('active');
+            dots[index].classList.add('active');
+        }
+
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % totalSlides;
+            updateCarousel(currentIndex);
+        }
+
+        function prevSlide() {
+            currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+            updateCarousel(currentIndex);
+        }
+
+        // Event Listeners
+        nextBtn.addEventListener('click', nextSlide);
+        prevBtn.addEventListener('click', prevSlide);
+
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                currentIndex = index;
+                updateCarousel(currentIndex);
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
