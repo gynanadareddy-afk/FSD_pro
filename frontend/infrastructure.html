@@ -89,12 +89,9 @@
             <!-- Labs Section -->
             <div id="labs" class="infrastructure-section">
                 <h3 class="subsection-title">Laboratories & Facilities</h3>
-                <div class="labs-grid">
+                <div class="labs-list">
                     <!-- Computer Lab -->
                     <div class="lab-card">
-                        <div class="lab-image">
-                            <img src="https://via.placeholder.com/400x300/2563eb/ffffff?text=Computer+Lab" alt="Computer Lab" onerror="this.src='https://via.placeholder.com/400x300/e2e8f0/64748b?text=Computer+Lab'">
-                        </div>
                         <div class="lab-info">
                             <h4>Computer Programming Lab</h4>
                             <p>State-of-the-art computer systems with latest software development tools and high-speed internet connectivity for programming and development work.</p>
@@ -104,13 +101,22 @@
                                 <span class="feature-tag"><i class="fas fa-code"></i> Development Tools</span>
                             </div>
                         </div>
+                        <div class="lab-image-wrapper">
+                            <div class="image-slider" data-lab="computing">
+                                <img src="images/computing-lab-1.jpg.jpeg" alt="Computing Lab 1" onerror="this.src='https://via.placeholder.com/600x400/2563eb/ffffff?text=Computing+Lab+1'">
+                                <img src="images/computing-lab-2.jpg.jpeg" class="opacity-0" alt="Computing Lab 2" onerror="this.src='https://via.placeholder.com/600x400/2563eb/ffffff?text=Computing+Lab+2'">
+                            </div>
+                            <button class="slider-nav prev" onclick="changeImage('computing', -1)">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="slider-nav next" onclick="changeImage('computing', 1)">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <!-- AI Lab -->
                     <div class="lab-card">
-                        <div class="lab-image">
-                            <img src="https://via.placeholder.com/400x300/10b981/ffffff?text=AI+Lab" alt="AI Lab" onerror="this.src='https://via.placeholder.com/400x300/e2e8f0/64748b?text=AI+Lab'">
-                        </div>
                         <div class="lab-info">
                             <h4>Artificial Intelligence Lab</h4>
                             <p>Advanced AI and machine learning laboratory equipped with GPU systems, AI frameworks, and specialized software for research in artificial intelligence.</p>
@@ -120,29 +126,38 @@
                                 <span class="feature-tag"><i class="fas fa-chart-line"></i> ML Tools</span>
                             </div>
                         </div>
+                        <div class="lab-image-wrapper">
+                            <div class="image-slider" data-lab="ai">
+                                <img src="images/ai-lab-1.jpg.jpeg" alt="AI Lab 1" onerror="this.src='https://via.placeholder.com/600x400/10b981/ffffff?text=AI+Lab+1'">
+                                <img src="images/ai-lab-2.jpg.jpeg" class="opacity-0" alt="AI Lab 2" onerror="this.src='https://via.placeholder.com/600x400/10b981/ffffff?text=AI+Lab+2'">
+                            </div>
+                            <button class="slider-nav prev" onclick="changeImage('ai', -1)">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="slider-nav next" onclick="changeImage('ai', 1)">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
                     </div>
 
-                    <!-- Database Lab -->
+                    <!-- Software Engineering Lab -->
                     <div class="lab-card">
-                        <div class="lab-image">
-                            <img src="https://via.placeholder.com/400x300/059669/ffffff?text=Database+Lab" alt="Database Lab" onerror="this.src='https://via.placeholder.com/400x300/e2e8f0/64748b?text=Database+Lab'">
-                        </div>
                         <div class="lab-info">
-                            <h4>Database & Big Data Lab</h4>
-                            <p>Specialized laboratory for database management, big data analytics, and data science with enterprise-grade database systems.</p>
+                            <h4>Software Engineering Lab</h4>
+                            <p>Specialized laboratory for software development methodologies, version control systems, and collaborative development tools with modern development environments.</p>
                             <div class="lab-features">
-                                <span class="feature-tag"><i class="fas fa-database"></i> Database Systems</span>
-                                <span class="feature-tag"><i class="fas fa-server"></i> Big Data Tools</span>
-                                <span class="feature-tag"><i class="fas fa-chart-bar"></i> Analytics</span>
+                                <span class="feature-tag"><i class="fas fa-code-branch"></i> Version Control</span>
+                                <span class="feature-tag"><i class="fas fa-users"></i> Collaboration Tools</span>
+                                <span class="feature-tag"><i class="fas fa-bug"></i> Testing Tools</span>
                             </div>
+                        </div>
+                        <div class="lab-image-wrapper">
+                            <img src="https://via.placeholder.com/600x400/059669/ffffff?text=Software+Engineering+Lab" alt="Software Engineering Lab" onerror="this.src='https://via.placeholder.com/600x400/e2e8f0/64748b?text=Software+Engineering+Lab'">
                         </div>
                     </div>
 
                     <!-- Network Lab -->
                     <div class="lab-card">
-                        <div class="lab-image">
-                            <img src="https://via.placeholder.com/400x300/dc2626/ffffff?text=Network+Lab" alt="Network Lab" onerror="this.src='https://via.placeholder.com/400x300/e2e8f0/64748b?text=Network+Lab'">
-                        </div>
                         <div class="lab-info">
                             <h4>Network & Security Lab</h4>
                             <p>Advanced networking laboratory with routers, switches, firewalls, and security tools for network administration and cybersecurity training.</p>
@@ -152,13 +167,13 @@
                                 <span class="feature-tag"><i class="fas fa-lock"></i> Cyber Security</span>
                             </div>
                         </div>
+                        <div class="lab-image-wrapper">
+                            <img src="https://via.placeholder.com/600x400/dc2626/ffffff?text=Network+Lab" alt="Network Lab" onerror="this.src='https://via.placeholder.com/600x400/e2e8f0/64748b?text=Network+Lab'">
+                        </div>
                     </div>
 
                     <!-- IoT Lab -->
                     <div class="lab-card">
-                        <div class="lab-image">
-                            <img src="https://via.placeholder.com/400x300/7c3aed/ffffff?text=IoT+Lab" alt="IoT Lab" onerror="this.src='https://via.placeholder.com/400x300/e2e8f0/64748b?text=IoT+Lab'">
-                        </div>
                         <div class="lab-info">
                             <h4>Internet of Things Lab</h4>
                             <p>IoT laboratory equipped with sensors, microcontrollers, development boards, and prototyping tools for embedded systems development.</p>
@@ -168,13 +183,13 @@
                                 <span class="feature-tag"><i class="fas fa-cogs"></i> Prototyping</span>
                             </div>
                         </div>
+                        <div class="lab-image-wrapper">
+                            <img src="https://via.placeholder.com/600x400/7c3aed/ffffff?text=IoT+Lab" alt="IoT Lab" onerror="this.src='https://via.placeholder.com/600x400/e2e8f0/64748b?text=IoT+Lab'">
+                        </div>
                     </div>
 
                     <!-- Research Lab -->
                     <div class="lab-card">
-                        <div class="lab-image">
-                            <img src="https://via.placeholder.com/400x300/8b5cf6/ffffff?text=Research+Lab" alt="Research Lab" onerror="this.src='https://via.placeholder.com/400x300/e2e8f0/64748b?text=Research+Lab'">
-                        </div>
                         <div class="lab-info">
                             <h4>Research & Innovation Lab</h4>
                             <p>Dedicated research facility for advanced research projects with high-performance computing systems and specialized research equipment.</p>
@@ -183,6 +198,9 @@
                                 <span class="feature-tag"><i class="fas fa-microscope"></i> HPC Systems</span>
                                 <span class="feature-tag"><i class="fas fa-lightbulb"></i> Innovation Tools</span>
                             </div>
+                        </div>
+                        <div class="lab-image-wrapper">
+                            <img src="https://via.placeholder.com/600x400/8b5cf6/ffffff?text=Research+Lab" alt="Research Lab" onerror="this.src='https://via.placeholder.com/600x400/e2e8f0/64748b?text=Research+Lab'">
                         </div>
                     </div>
                 </div>
@@ -444,6 +462,75 @@
                 </div>
             </div>
 
+            <!-- Featured Laboratory Section -->
+            <div class="featured-lab-section" style="margin: 60px 0; padding: 40px 0; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); border-radius: 20px; display: block !important; visibility: visible !important;">
+                <div class="featured-lab-container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+                    <div class="featured-lab-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;">
+                        <!-- Left Column - Content -->
+                        <div class="featured-lab-content">
+                            <h2 class="featured-lab-title">Advanced Computing Infrastructure</h2>
+                            <p class="featured-lab-description">
+                                Experience cutting-edge technology in our state-of-the-art computing facilities. 
+                                Our labs are equipped with the latest hardware and software to support 
+                                innovative research and hands-on learning experiences.
+                            </p>
+                            <div class="featured-lab-features">
+                                <div class="feature-tag">
+                                    <i class="fas fa-microchip"></i>
+                                    <span>High-Performance Systems</span>
+                                </div>
+                                <div class="feature-tag">
+                                    <i class="fas fa-network-wired"></i>
+                                    <span>Gigabit Network</span>
+                                </div>
+                                <div class="feature-tag">
+                                    <i class="fas fa-cloud"></i>
+                                    <span>Cloud Integration</span>
+                                </div>
+                                <div class="feature-tag">
+                                    <i class="fas fa-shield-alt"></i>
+                                    <span>Advanced Security</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Right Column - Image Carousel -->
+                        <div class="featured-lab-carousel">
+                            <div class="carousel-container">
+                                <div class="carousel-slide active">
+                                    <img src="images/computing-lab-1.jpg.jpeg" alt="Computing Lab 1" onerror="this.src='https://via.placeholder.com/600x400/2563eb/ffffff?text=Computing+Lab+1'">
+                                </div>
+                                <div class="carousel-slide">
+                                    <img src="images/computing-lab-2.jpg.jpeg" alt="Computing Lab 2" onerror="this.src='https://via.placeholder.com/600x400/2563eb/ffffff?text=Computing+Lab+2'">
+                                </div>
+                                <div class="carousel-slide">
+                                    <img src="images/ai-lab-1.jpg.jpeg" alt="AI Lab 1" onerror="this.src='https://via.placeholder.com/600x400/10b981/ffffff?text=AI+Lab+1'">
+                                </div>
+                                <div class="carousel-slide">
+                                    <img src="images/ai-lab-2.jpg.jpeg" alt="AI Lab 2" onerror="this.src='https://via.placeholder.com/600x400/10b981/ffffff?text=AI+Lab+2'">
+                                </div>
+                                
+                                <!-- Navigation Buttons -->
+                                <button class="carousel-btn carousel-btn-prev" onclick="changeSlide(-1)">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <button class="carousel-btn carousel-btn-next" onclick="changeSlide(1)">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                                
+                                <!-- Indicators -->
+                                <div class="carousel-indicators">
+                                    <span class="indicator active" onclick="goToSlide(0)"></span>
+                                    <span class="indicator" onclick="goToSlide(1)"></span>
+                                    <span class="indicator" onclick="goToSlide(2)"></span>
+                                    <span class="indicator" onclick="goToSlide(3)"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <!-- Infrastructure Stats -->
             <div class="infrastructure-stats">
                 <div class="stat-item">
@@ -511,7 +598,168 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
-    <script src="maps.js"></script>
+    <!-- <script src="script.js"></script> -->
+    <!-- <script src="maps.js"></script> -->
+    <script>
+        // Image slider functionality
+        const labImages = {
+            computing: [
+                'images/computing-lab-1.jpg.jpeg',
+                'images/computing-lab-2.jpg.jpeg'
+            ],
+            ai: [
+                'images/ai-lab-1.jpg.jpeg',
+                'images/ai-lab-2.jpg.jpeg'
+            ]
+        };
+        
+        const currentImageIndex = {
+            computing: 0,
+            ai: 0
+        };
+        
+        function changeImage(lab, direction) {
+            const images = labImages[lab];
+            const slider = document.querySelector(`[data-lab="${lab}"]`);
+            const imageElements = slider.querySelectorAll('img');
+            
+            // Hide current image with opacity transition
+            imageElements[currentImageIndex[lab]].style.opacity = '0';
+            
+            // Calculate new index
+            currentImageIndex[lab] += direction;
+            if (currentImageIndex[lab] < 0) {
+                currentImageIndex[lab] = images.length - 1;
+            } else if (currentImageIndex[lab] >= images.length) {
+                currentImageIndex[lab] = 0;
+            }
+            
+            // Show new image with opacity transition
+            setTimeout(() => {
+                imageElements[currentImageIndex[lab]].style.opacity = '1';
+            }, 150);
+        }
+        
+        // Carousel functionality
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.carousel-slide');
+        const indicators = document.querySelectorAll('.indicator');
+        const totalSlides = slides.length;
+        
+        function showSlide(index) {
+            // Hide all slides
+            slides.forEach(slide => slide.classList.remove('active'));
+            indicators.forEach(indicator => indicator.classList.remove('active'));
+            
+            // Show current slide
+            slides[index].classList.add('active');
+            indicators[index].classList.add('active');
+        }
+        
+        function changeSlide(direction) {
+            currentSlide += direction;
+            
+            // Wrap around
+            if (currentSlide < 0) {
+                currentSlide = totalSlides - 1;
+            } else if (currentSlide >= totalSlides) {
+                currentSlide = 0;
+            }
+            
+            showSlide(currentSlide);
+        }
+        
+        function goToSlide(index) {
+            currentSlide = index;
+            showSlide(currentSlide);
+        }
+        
+        // Auto-play carousel
+        function autoPlayCarousel() {
+            changeSlide(1);
+        }
+        
+        // Start auto-play
+        let autoPlayInterval = setInterval(autoPlayCarousel, 5000);
+        
+        // Pause auto-play on hover
+        const carouselContainer = document.querySelector('.carousel-container');
+        carouselContainer.addEventListener('mouseenter', () => {
+            clearInterval(autoPlayInterval);
+        });
+        
+        carouselContainer.addEventListener('mouseleave', () => {
+            autoPlayInterval = setInterval(autoPlayCarousel, 5000);
+        });
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                changeSlide(-1);
+                clearInterval(autoPlayInterval);
+                autoPlayInterval = setInterval(autoPlayCarousel, 5000);
+            } else if (e.key === 'ArrowRight') {
+                changeSlide(1);
+                clearInterval(autoPlayInterval);
+                autoPlayInterval = setInterval(autoPlayCarousel, 5000);
+            }
+        });
+        
+        // Touch/swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        carouselContainer.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        carouselContainer.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    // Swipe left - next slide
+                    changeSlide(1);
+                } else {
+                    // Swipe right - previous slide
+                    changeSlide(-1);
+                }
+                clearInterval(autoPlayInterval);
+                autoPlayInterval = setInterval(autoPlayCarousel, 5000);
+            }
+        }
+        
+        // Add keyboard navigation for lab sliders
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' && e.target.closest('.carousel-container')) {
+                // Carousel already handled above
+                return;
+            } else if (e.key === 'ArrowRight' && e.target.closest('.carousel-container')) {
+                // Carousel already handled above
+                return;
+            }
+            
+            // Original lab slider navigation
+            if (e.key === 'ArrowLeft') {
+                const visibleSliders = document.querySelectorAll('.image-slider');
+                if (visibleSliders.length > 0) {
+                    const lab = visibleSliders[0].dataset.lab;
+                    changeImage(lab, -1);
+                }
+            } else if (e.key === 'ArrowRight') {
+                const visibleSliders = document.querySelectorAll('.image-slider');
+                if (visibleSliders.length > 0) {
+                    const lab = visibleSliders[0].dataset.lab;
+                    changeImage(lab, 1);
+                }
+            }
+        });
+    </script>
 </body>
 </html>

@@ -475,4 +475,45 @@ document.addEventListener('DOMContentLoaded', () => {
     // Uncomment these lines when ready to implement
     // implementSearch();
     // implementThemeToggle();
+
+    // Feature Section Slider Logic
+    const featureSlides = document.querySelectorAll('.feature-slide');
+    const featureDots = document.querySelectorAll('.feature-dot');
+    const featurePrevBtn = document.querySelector('.feature-btn.prev');
+    const featureNextBtn = document.querySelector('.feature-btn.next');
+    
+    if (featureSlides.length > 0) {
+        let currentFeatureIndex = 0;
+        const totalFeatureSlides = featureSlides.length;
+
+        function updateFeatureCarousel(index) {
+            featureSlides.forEach(slide => slide.classList.remove('active'));
+            featureDots.forEach(dot => dot.classList.remove('active'));
+            
+            featureSlides[index].classList.add('active');
+            if (featureDots[index]) {
+                featureDots[index].classList.add('active');
+            }
+        }
+
+        function nextFeatureSlide() {
+            currentFeatureIndex = (currentFeatureIndex + 1) % totalFeatureSlides;
+            updateFeatureCarousel(currentFeatureIndex);
+        }
+
+        function prevFeatureSlide() {
+            currentFeatureIndex = (currentFeatureIndex - 1 + totalFeatureSlides) % totalFeatureSlides;
+            updateFeatureCarousel(currentFeatureIndex);
+        }
+
+        if (featureNextBtn) featureNextBtn.addEventListener('click', nextFeatureSlide);
+        if (featurePrevBtn) featurePrevBtn.addEventListener('click', prevFeatureSlide);
+
+        featureDots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                currentFeatureIndex = index;
+                updateFeatureCarousel(currentFeatureIndex);
+            });
+        });
+    }
 });
