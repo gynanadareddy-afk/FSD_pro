@@ -1,105 +1,56 @@
 # CSE Department Website
 
-A modern, responsive website for the Computer Science & Engineering Department, inspired by the IIT Hyderabad AI page.
+A responsive department site with a Node.js backend that now runs fully locally using an in-memory MongoDB instance.
 
-## Features
+## Local Development
 
-- **Modern UI Design**: Clean, professional interface with smooth animations
-- **Responsive Layout**: Works perfectly on desktop, tablet, and mobile devices
-- **Dynamic Content**: Faculty, news, events, and courses loaded from database
-- **Interactive Elements**: Smooth scrolling, hover effects, and micro-interactions
-- **Backend API**: RESTful API with Node.js, Express, and MongoDB
-- **Sample Data**: Pre-populated with realistic department information
-
-## Technology Stack
-
-### Frontend
-- **HTML5**: Semantic markup structure
-- **CSS3**: Modern styling with animations and transitions
-- **JavaScript**: Interactive features and dynamic content loading
-- **Font Awesome**: Icon library
-- **Google Fonts**: Inter font family
-
-### Backend
-- **Node.js**: JavaScript runtime environment
-- **Express.js**: Web application framework
-- **MongoDB**: NoSQL database
-- **Mongoose**: MongoDB object modeling
-- **CORS**: Cross-origin resource sharing
-- **Helmet**: Security middleware
-- **Morgan**: HTTP request logger
-
-## Project Structure
-
-```
-FSD_pro1/
-├── backend/
-│   ├── server.js          # Main server file
-│   ├── package.json       # Node.js dependencies
-│   └── .env              # Environment variables
-├── frontend/
-│   ├── index.html        # Main HTML file
-│   ├── styles.css        # CSS styling
-│   └── script.js         # JavaScript functionality
-├── database/             # Database configuration
-└── README.md            # Project documentation
-```
-
-## Installation and Setup
+### What changed
+- The local backend uses `mongodb-memory-server-core`, so you do not need a separately installed MongoDB server.
+- The frontend now reads homepage data from the Node API instead of falling back to hardcoded arrays in the browser.
+- Contact form submissions are stored in the in-memory database for the current run.
 
 ### Prerequisites
-- Node.js (v14 or higher)
-- MongoDB (installed and running)
-- npm (Node Package Manager)
+- Node.js 18+
+- npm
 
-### Backend Setup
+If the project is opened through WSL, make sure `node` and `npm` are installed inside Ubuntu as native Linux tools. Using Windows `npm` against the `\\wsl.localhost` path will break package installation.
 
-1. Navigate to the backend directory:
-```bash
-cd backend
-```
-
+### Start the app
+1. Go to the backend folder:
+  ```bash
+  cd backend
+  ```
 2. Install dependencies:
-```bash
-npm install
-```
+  ```bash
+  npm install
+  ```
+3. Start the local server:
+  ```bash
+  npm start
+  ```
 
-3. Create a `.env` file with the following content:
-```
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/cse-department
-```
+For auto-reload during development:
 
-4. Start the server:
-```bash
-npm start
-```
-
-For development with auto-restart:
 ```bash
 npm run dev
 ```
 
-### Frontend Setup
+Open `http://localhost:5000`.
 
-The frontend files are already created and will be served by the backend server. Simply open your browser and navigate to:
-```
-http://localhost:5000
-```
+## Local API
 
-## API Endpoints
+- `GET /api/health`
+- `GET /api/faculty`
+- `GET /api/news?limit=3`
+- `GET /api/events?limit=3`
+- `GET /api/courses`
+- `POST /api/contact`
 
-### Faculty
-- `GET /api/faculty` - Get all faculty members
+## Notes
 
-### News
-- `GET /api/news` - Get all news articles
-
-### Events
-- `GET /api/events` - Get all upcoming events
-
-### Courses
-- `GET /api/courses` - Get all courses
+- Data is seeded automatically every time the server starts.
+- Because the database is in memory, any submitted contact messages are cleared when the server stops.
+- The PHP/MySQL files under `backend/api`, `backend/config`, and `backend/database` are still present, but they are no longer required for the local Node-based flow.
 
 ## Website Sections
 

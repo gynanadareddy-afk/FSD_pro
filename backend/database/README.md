@@ -1,5 +1,17 @@
 # CSE Department Database Setup
 
+## Local Node.js Option
+
+For local development, you can skip the PHP/MySQL setup entirely and run the Node backend with `mongodb-memory-server-core` instead:
+
+```bash
+cd backend
+npm install
+npm start
+```
+
+That starts an Express server on `http://localhost:5000` and seeds an in-memory MongoDB instance automatically. This is the simplest way to run the homepage locally without hardcoded frontend data.
+
 ## Overview
 This database provides an optimized backend for the CSE Department website with proper indexing, relationships, and performance optimization.
 

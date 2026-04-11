@@ -3,6 +3,26 @@ const navToggle = document.getElementById('navToggle');
 const navMenu = document.getElementById('navMenu');
 const navLinks = document.querySelectorAll('.nav-link');
 const contactForm = document.getElementById('contactForm');
+const apiBaseUrl = '/api';
+
+function buildApiUrl(endpoint, query = {}) {
+    const url = new URL(`${apiBaseUrl}/${endpoint}`, window.location.origin);
+    Object.entries(query).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+            url.searchParams.set(key, value);
+        }
+    });
+    return url.toString();
+}
+
+function showDataLoadError(containerId, message) {
+    const container = document.getElementById(containerId);
+    if (!container) {
+        return;
+    }
+
+    container.innerHTML = `<p class="data-error">${message}</p>`;
+}
 
 // Check screen size and set initial state
 function checkScreenSize() {
@@ -111,7 +131,7 @@ window.addEventListener('scroll', () => {
 // Fetch and display faculty data from database
 async function loadFaculty() {
     try {
-        const response = await fetch('/backend/api/index.php?endpoint=faculty');
+        const response = await fetch(buildApiUrl('faculty'));
         const result = await response.json();
         
         if (result.success) {
@@ -150,56 +170,14 @@ async function loadFaculty() {
         }
     } catch (error) {
         console.error('Error loading faculty:', error);
-        // Fallback to static data if API fails
-        loadStaticFaculty();
+        showDataLoadError('facultyGrid', 'Faculty details are temporarily unavailable.');
     }
-}
-
-// Fallback static faculty data
-function loadStaticFaculty() {
-    const facultyGrid = document.getElementById('facultyGrid');
-    if (!facultyGrid) return;
-    
-    const staticFaculty = [
-        {
-            name: 'Dr. Jane Smith',
-            designation: 'Professor & Head',
-            email: 'hod.cse@college.edu',
-            specialization: ['AI', 'Machine Learning']
-        },
-        {
-            name: 'Dr. John Doe',
-            designation: 'Associate Professor',
-            email: 'john.doe@college.edu',
-            specialization: ['Cybersecurity', 'Networks']
-        }
-    ];
-    
-    facultyGrid.innerHTML = '';
-    staticFaculty.forEach(member => {
-        const facultyCard = document.createElement('div');
-        facultyCard.className = 'faculty-card';
-        facultyCard.innerHTML = `
-            <div class="faculty-image">
-                <i class="fas fa-user-tie"></i>
-            </div>
-            <div class="faculty-info">
-                <h3>${member.name}</h3>
-                <div class="designation">${member.designation}</div>
-                <div class="email">${member.email}</div>
-                <div class="specialization">
-                    ${member.specialization.map(spec => `<span class="specialization-tag">${spec}</span>`).join('')}
-                </div>
-            </div>
-        `;
-        facultyGrid.appendChild(facultyCard);
-    });
 }
 
 // Fetch and display news data from database
 async function loadNews() {
     try {
-        const response = await fetch('/backend/api/index.php?endpoint=news&limit=3');
+        const response = await fetch(buildApiUrl('news', { limit: 3 }));
         const result = await response.json();
         
         if (result.success) {
@@ -221,46 +199,14 @@ async function loadNews() {
         }
     } catch (error) {
         console.error('Error loading news:', error);
-        // Fallback to static data if API fails
-        loadStaticNews();
+        showDataLoadError('newsList', 'Latest news is temporarily unavailable.');
     }
-}
-
-// Fallback static news data
-function loadStaticNews() {
-    const newsList = document.getElementById('newsList');
-    if (!newsList) return;
-    
-    const staticNews = [
-        {
-            title: 'New Research Lab Inaugurated',
-            date: new Date().toLocaleDateString(),
-            content: 'The department inaugurated a new AI research lab with state-of-the-art facilities.'
-        },
-        {
-            title: 'Student Achievement in Hackathon',
-            date: new Date().toLocaleDateString(),
-            content: 'Our students won first place in the national hackathon competition.'
-        }
-    ];
-    
-    newsList.innerHTML = '';
-    staticNews.forEach(item => {
-        const newsItem = document.createElement('div');
-        newsItem.className = 'news-item';
-        newsItem.innerHTML = `
-            <h4>${item.title}</h4>
-            <div class="date">${item.date}</div>
-            <p>${item.content}</p>
-        `;
-        newsList.appendChild(newsItem);
-    });
 }
 
 // Fetch and display events data from database
 async function loadEvents() {
     try {
-        const response = await fetch('/backend/api/index.php?endpoint=events&limit=3');
+        const response = await fetch(buildApiUrl('events', { limit: 3 }));
         const result = await response.json();
         
         if (result.success) {
@@ -283,100 +229,54 @@ async function loadEvents() {
         }
     } catch (error) {
         console.error('Error loading events:', error);
-        // Fallback to static data if API fails
-        loadStaticEvents();
+        showDataLoadError('eventsList', 'Upcoming events are temporarily unavailable.');
     }
 }
 
-// Fallback static events data
-function loadStaticEvents() {
-    const eventsList = document.getElementById('eventsList');
-    if (!eventsList) return;
-    
-    const staticEvents = [
-        {
-            title: 'AI Workshop',
-            date: new Date().toLocaleDateString(),
-            venue: 'Lab 301',
-            description: 'Introduction to Artificial Intelligence and Machine Learning'
-        },
-        {
-            title: 'Guest Lecture on Cybersecurity',
-            date: new Date().toLocaleDateString(),
-            venue: 'Auditorium',
-            description: 'Latest trends in cybersecurity and network protection'
-        }
-    ];
-    
-    eventsList.innerHTML = '';
-    staticEvents.forEach(event => {
-        const eventItem = document.createElement('div');
-        eventItem.className = 'event-item';
-        eventItem.innerHTML = `
-            <h4>${event.title}</h4>
-            <div class="date">${event.date}</div>
-            <div class="venue">📍 ${event.venue}</div>
-            <p>${event.description}</p>
-        `;
-        eventsList.appendChild(eventItem);
-    });
-}
-
 // Enhanced contact form submission with database
-contactForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const formData = new FormData(contactForm);
-    const formObject = {};
-    formData.forEach((value, key) => {
-        formObject[key] = value;
-    });
-    
-    try {
-        const response = await fetch('/backend/api/index.php?endpoint=contact', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formObject)
+if (contactForm) {
+    contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(contactForm);
+        const formObject = {};
+        formData.forEach((value, key) => {
+            formObject[key] = value;
         });
-        
-        const result = await response.json();
-        
-        if (result.success) {
-            // Show success message
-            const submitBtn = contactForm.querySelector('button[type="submit"]');
-            const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Message Sent!';
-            submitBtn.style.background = '#10b981';
-            
-            // Reset form
-            contactForm.reset();
-            
-            // Reset button after 3 seconds
-            setTimeout(() => {
-                submitBtn.textContent = originalText;
-                submitBtn.style.background = '';
-            }, 3000);
-        } else {
-            throw new Error(result.message || 'Failed to send message');
-        }
-    } catch (error) {
-        console.error('Error submitting contact form:', error);
-        // Fallback to client-side success message
+
         const submitBtn = contactForm.querySelector('button[type="submit"]');
         const originalText = submitBtn.textContent;
-        submitBtn.textContent = 'Message Sent!';
-        submitBtn.style.background = '#10b981';
-        
-        contactForm.reset();
-        
+
+        try {
+            const response = await fetch(buildApiUrl('contact'), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formObject)
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                throw new Error(result.message || 'Failed to send message');
+            }
+
+            submitBtn.textContent = 'Message Sent!';
+            submitBtn.style.background = '#10b981';
+            contactForm.reset();
+        } catch (error) {
+            console.error('Error submitting contact form:', error);
+            submitBtn.textContent = 'Try Again';
+            submitBtn.style.background = '#dc2626';
+        }
+
         setTimeout(() => {
             submitBtn.textContent = originalText;
             submitBtn.style.background = '';
         }, 3000);
-    }
-});
+    });
+}
 
 // Intersection Observer for animations
 const observerOptions = {
