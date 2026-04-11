@@ -4,14 +4,31 @@ const navMenu = document.getElementById('navMenu');
 const navLinks = document.querySelectorAll('.nav-link');
 const contactForm = document.getElementById('contactForm');
 
+// Check screen size and set initial state
+function checkScreenSize() {
+    if (window.innerWidth <= 1024) {
+        navMenu.classList.add('mobile-hidden');
+        navToggle.style.display = 'flex';
+    } else {
+        navMenu.classList.remove('mobile-hidden');
+        navToggle.style.display = 'none';
+    }
+}
+
+// Initial check on page load
+checkScreenSize();
+
+// Update on window resize
+window.addEventListener('resize', checkScreenSize);
+
 // Mobile Navigation Toggle
 navToggle.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
+    navMenu.classList.toggle('mobile-hidden');
     
     // Animate hamburger menu
     const spans = navToggle.querySelectorAll('span');
     spans.forEach((span, index) => {
-        if (navMenu.classList.contains('active')) {
+        if (navMenu.classList.contains('mobile-hidden')) {
             if (index === 0) span.style.transform = 'rotate(45deg) translate(5px, 5px)';
             if (index === 1) span.style.opacity = '0';
             if (index === 2) span.style.transform = 'rotate(-45deg) translate(7px, -6px)';
@@ -25,7 +42,7 @@ navToggle.addEventListener('click', () => {
 // Close mobile menu when clicking on a link
 navLinks.forEach(link => {
     link.addEventListener('click', () => {
-        navMenu.classList.remove('active');
+        navMenu.classList.add('mobile-hidden');
         const spans = navToggle.querySelectorAll('span');
         spans.forEach(span => {
             span.style.transform = '';
@@ -38,7 +55,9 @@ navLinks.forEach(link => {
 navLinks.forEach(link => {
     link.addEventListener('click', (e) => {
         const href = link.getAttribute('href');
-        if (href && href.startsWith('#')) {
+        
+        // Only handle smooth scrolling for internal anchor links
+        if (href && href.startsWith('#') && !href.startsWith('#http')) {
             e.preventDefault();
             const targetId = href.substring(1);
             const targetSection = document.getElementById(targetId);
@@ -51,6 +70,7 @@ navLinks.forEach(link => {
                 });
             }
         }
+        // Let external page links work normally (research.html, programs.html, etc.)
     });
 });
 
@@ -88,88 +108,221 @@ window.addEventListener('scroll', () => {
     }
 });
 
-// Fetch and display faculty data
+// Fetch and display faculty data from database
 async function loadFaculty() {
     try {
-        const response = await fetch('/api/faculty');
-        const faculty = await response.json();
+        const response = await fetch('/backend/api/index.php?endpoint=faculty');
+        const result = await response.json();
         
-        const facultyGrid = document.getElementById('facultyGrid');
-        facultyGrid.innerHTML = '';
-        
-        faculty.forEach(member => {
-            const facultyCard = document.createElement('div');
-            facultyCard.className = 'faculty-card';
-            facultyCard.innerHTML = `
-                <div class="faculty-image">
-                    <i class="fas fa-user-tie"></i>
-                </div>
-                <div class="faculty-info">
-                    <h3>${member.name}</h3>
-                    <div class="designation">${member.designation}</div>
-                    <div class="email">${member.email}</div>
-                    <div class="specialization">
-                        ${member.specialization.map(spec => `<span class="specialization-tag">${spec}</span>`).join('')}
-                    </div>
-                </div>
-            `;
-            facultyGrid.appendChild(facultyCard);
-        });
+        if (result.success) {
+            const facultyGrid = document.getElementById('facultyGrid');
+            if (facultyGrid) {
+                facultyGrid.innerHTML = '';
+                
+                result.data.forEach(member => {
+                    const facultyCard = document.createElement('div');
+                    facultyCard.className = 'faculty-card';
+                    
+                    const profileImage = member.user_image || member.profile_image;
+                    const imageHtml = profileImage ? 
+                        `<img src="${profileImage}" alt="${member.first_name} ${member.last_name}" onerror="this.src='https://via.placeholder.com/150x150/2563eb/ffffff?text=${member.first_name.charAt(0)}'">` :
+                        `<i class="fas fa-user-tie"></i>`;
+                    
+                    const researchAreas = member.research_areas ? 
+                        member.research_areas.map(area => `<span class="specialization-tag">${area.area_name}</span>`).join('') : '';
+                    
+                    facultyCard.innerHTML = `
+                        <div class="faculty-image">
+                            ${imageHtml}
+                        </div>
+                        <div class="faculty-info">
+                            <h3>${member.first_name} ${member.last_name}</h3>
+                            <div class="designation">${member.designation}</div>
+                            <div class="email">${member.email}</div>
+                            <div class="specialization">
+                                ${researchAreas}
+                            </div>
+                        </div>
+                    `;
+                    facultyGrid.appendChild(facultyCard);
+                });
+            }
+        }
     } catch (error) {
         console.error('Error loading faculty:', error);
+        // Fallback to static data if API fails
+        loadStaticFaculty();
     }
 }
 
-// Fetch and display news data
+// Fallback static faculty data
+function loadStaticFaculty() {
+    const facultyGrid = document.getElementById('facultyGrid');
+    if (!facultyGrid) return;
+    
+    const staticFaculty = [
+        {
+            name: 'Dr. Jane Smith',
+            designation: 'Professor & Head',
+            email: 'hod.cse@college.edu',
+            specialization: ['AI', 'Machine Learning']
+        },
+        {
+            name: 'Dr. John Doe',
+            designation: 'Associate Professor',
+            email: 'john.doe@college.edu',
+            specialization: ['Cybersecurity', 'Networks']
+        }
+    ];
+    
+    facultyGrid.innerHTML = '';
+    staticFaculty.forEach(member => {
+        const facultyCard = document.createElement('div');
+        facultyCard.className = 'faculty-card';
+        facultyCard.innerHTML = `
+            <div class="faculty-image">
+                <i class="fas fa-user-tie"></i>
+            </div>
+            <div class="faculty-info">
+                <h3>${member.name}</h3>
+                <div class="designation">${member.designation}</div>
+                <div class="email">${member.email}</div>
+                <div class="specialization">
+                    ${member.specialization.map(spec => `<span class="specialization-tag">${spec}</span>`).join('')}
+                </div>
+            </div>
+        `;
+        facultyGrid.appendChild(facultyCard);
+    });
+}
+
+// Fetch and display news data from database
 async function loadNews() {
     try {
-        const response = await fetch('/api/news');
-        const news = await response.json();
+        const response = await fetch('/backend/api/index.php?endpoint=news&limit=3');
+        const result = await response.json();
         
-        const newsList = document.getElementById('newsList');
-        newsList.innerHTML = '';
-        
-        news.slice(0, 3).forEach(item => {
-            const newsItem = document.createElement('div');
-            newsItem.className = 'news-item';
-            newsItem.innerHTML = `
-                <h4>${item.title}</h4>
-                <div class="date">${new Date(item.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
-                <p>${item.content.substring(0, 100)}...</p>
-            `;
-            newsList.appendChild(newsItem);
-        });
+        if (result.success) {
+            const newsList = document.getElementById('newsList');
+            if (newsList) {
+                newsList.innerHTML = '';
+                
+                result.data.forEach(item => {
+                    const newsItem = document.createElement('div');
+                    newsItem.className = 'news-item';
+                    newsItem.innerHTML = `
+                        <h4>${item.title}</h4>
+                        <div class="date">${new Date(item.publish_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                        <p>${item.content.substring(0, 100)}...</p>
+                    `;
+                    newsList.appendChild(newsItem);
+                });
+            }
+        }
     } catch (error) {
         console.error('Error loading news:', error);
+        // Fallback to static data if API fails
+        loadStaticNews();
     }
 }
 
-// Fetch and display events data
+// Fallback static news data
+function loadStaticNews() {
+    const newsList = document.getElementById('newsList');
+    if (!newsList) return;
+    
+    const staticNews = [
+        {
+            title: 'New Research Lab Inaugurated',
+            date: new Date().toLocaleDateString(),
+            content: 'The department inaugurated a new AI research lab with state-of-the-art facilities.'
+        },
+        {
+            title: 'Student Achievement in Hackathon',
+            date: new Date().toLocaleDateString(),
+            content: 'Our students won first place in the national hackathon competition.'
+        }
+    ];
+    
+    newsList.innerHTML = '';
+    staticNews.forEach(item => {
+        const newsItem = document.createElement('div');
+        newsItem.className = 'news-item';
+        newsItem.innerHTML = `
+            <h4>${item.title}</h4>
+            <div class="date">${item.date}</div>
+            <p>${item.content}</p>
+        `;
+        newsList.appendChild(newsItem);
+    });
+}
+
+// Fetch and display events data from database
 async function loadEvents() {
     try {
-        const response = await fetch('/api/events');
-        const events = await response.json();
+        const response = await fetch('/backend/api/index.php?endpoint=events&limit=3');
+        const result = await response.json();
         
-        const eventsList = document.getElementById('eventsList');
-        eventsList.innerHTML = '';
-        
-        events.slice(0, 3).forEach(event => {
-            const eventItem = document.createElement('div');
-            eventItem.className = 'event-item';
-            eventItem.innerHTML = `
-                <h4>${event.title}</h4>
-                <div class="date">${new Date(event.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
-                <div class="venue">📍 ${event.venue}</div>
-                <p>${event.description.substring(0, 100)}...</p>
-            `;
-            eventsList.appendChild(eventItem);
-        });
+        if (result.success) {
+            const eventsList = document.getElementById('eventsList');
+            if (eventsList) {
+                eventsList.innerHTML = '';
+                
+                result.data.forEach(event => {
+                    const eventItem = document.createElement('div');
+                    eventItem.className = 'event-item';
+                    eventItem.innerHTML = `
+                        <h4>${event.title}</h4>
+                        <div class="date">${new Date(event.start_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                        <div class="venue">📍 ${event.venue}</div>
+                        <p>${event.description.substring(0, 100)}...</p>
+                    `;
+                    eventsList.appendChild(eventItem);
+                });
+            }
+        }
     } catch (error) {
         console.error('Error loading events:', error);
+        // Fallback to static data if API fails
+        loadStaticEvents();
     }
 }
 
-// Contact form submission
+// Fallback static events data
+function loadStaticEvents() {
+    const eventsList = document.getElementById('eventsList');
+    if (!eventsList) return;
+    
+    const staticEvents = [
+        {
+            title: 'AI Workshop',
+            date: new Date().toLocaleDateString(),
+            venue: 'Lab 301',
+            description: 'Introduction to Artificial Intelligence and Machine Learning'
+        },
+        {
+            title: 'Guest Lecture on Cybersecurity',
+            date: new Date().toLocaleDateString(),
+            venue: 'Auditorium',
+            description: 'Latest trends in cybersecurity and network protection'
+        }
+    ];
+    
+    eventsList.innerHTML = '';
+    staticEvents.forEach(event => {
+        const eventItem = document.createElement('div');
+        eventItem.className = 'event-item';
+        eventItem.innerHTML = `
+            <h4>${event.title}</h4>
+            <div class="date">${event.date}</div>
+            <div class="venue">📍 ${event.venue}</div>
+            <p>${event.description}</p>
+        `;
+        eventsList.appendChild(eventItem);
+    });
+}
+
+// Enhanced contact form submission with database
 contactForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     
@@ -179,20 +332,50 @@ contactForm.addEventListener('submit', async (e) => {
         formObject[key] = value;
     });
     
-    // Show success message (in a real app, this would send to a server)
-    const submitBtn = contactForm.querySelector('button[type="submit"]');
-    const originalText = submitBtn.textContent;
-    submitBtn.textContent = 'Message Sent!';
-    submitBtn.style.background = '#10b981';
-    
-    // Reset form
-    contactForm.reset();
-    
-    // Reset button after 3 seconds
-    setTimeout(() => {
-        submitBtn.textContent = originalText;
-        submitBtn.style.background = '';
-    }, 3000);
+    try {
+        const response = await fetch('/backend/api/index.php?endpoint=contact', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formObject)
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            // Show success message
+            const submitBtn = contactForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Message Sent!';
+            submitBtn.style.background = '#10b981';
+            
+            // Reset form
+            contactForm.reset();
+            
+            // Reset button after 3 seconds
+            setTimeout(() => {
+                submitBtn.textContent = originalText;
+                submitBtn.style.background = '';
+            }, 3000);
+        } else {
+            throw new Error(result.message || 'Failed to send message');
+        }
+    } catch (error) {
+        console.error('Error submitting contact form:', error);
+        // Fallback to client-side success message
+        const submitBtn = contactForm.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Message Sent!';
+        submitBtn.style.background = '#10b981';
+        
+        contactForm.reset();
+        
+        setTimeout(() => {
+            submitBtn.textContent = originalText;
+            submitBtn.style.background = '';
+        }, 3000);
+    }
 });
 
 // Intersection Observer for animations

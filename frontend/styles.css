@@ -1051,12 +1051,505 @@ section {
     }
 }
 
-/* Responsive Design for Maps */
-@media (max-width: 768px) {
-    .map-controls {
-        flex-direction: column;
-        align-items: stretch;
+/* People Page Styles */
+.people {
+    padding: 6rem 0 4rem;
+}
+
+.people-section {
+    margin-bottom: 5rem;
+}
+
+.subsection-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 3rem;
+    text-align: center;
+    position: relative;
+}
+
+.subsection-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, #2563eb, #3b82f6);
+    border-radius: 2px;
+}
+
+/* Faculty Grid */
+.faculty-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+.faculty-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid #e2e8f0;
+}
+
+.faculty-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
+}
+
+.faculty-image {
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    position: relative;
+}
+
+.faculty-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.faculty-card:hover .faculty-image img {
+    transform: scale(1.05);
+}
+
+.faculty-info {
+    padding: 2rem;
+    text-align: center;
+}
+
+.faculty-info h4 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.faculty-title {
+    color: #2563eb;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.faculty-specialization {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.faculty-details {
+    margin-bottom: 1.5rem;
+    text-align: left;
+    background: #f8fafc;
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #2563eb;
+}
+
+.faculty-details p {
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: #475569;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.faculty-details i {
+    color: #2563eb;
+    width: 16px;
+    text-align: center;
+}
+
+.faculty-contact {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.contact-link {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #2563eb;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 2px solid #e2e8f0;
+}
+
+.contact-link:hover {
+    background: #2563eb;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+/* Staff Grid */
+.staff-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+.staff-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    padding: 1.5rem;
+}
+
+.staff-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.1);
+}
+
+.staff-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 1.5rem;
+    flex-shrink: 0;
+}
+
+.staff-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.staff-info {
+    flex: 1;
+}
+
+.staff-info h4 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.staff-title {
+    color: #2563eb;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.staff-department {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.staff-details {
+    margin-bottom: 1rem;
+    background: #f0f9ff;
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #10b981;
+}
+
+.staff-details p {
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: #475569;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.staff-details i {
+    color: #10b981;
+    width: 16px;
+    text-align: center;
+}
+
+.staff-email {
+    color: #2563eb;
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.staff-email:hover {
+    color: #1d4ed8;
+}
+
+/* Research Scholars Grid */
+.scholars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+.scholar-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid #e2e8f0;
+}
+
+.scholar-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
+}
+
+.scholar-image {
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
+    position: relative;
+}
+
+.scholar-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.scholar-card:hover .scholar-image img {
+    transform: scale(1.05);
+}
+
+.scholar-info {
+    padding: 2rem;
+    text-align: center;
+}
+
+.scholar-info h4 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.scholar-program {
+    color: #f59e0b;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.scholar-topic {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+.scholar-supervisor {
+    color: #2563eb;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+}
+
+.scholar-contact {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+/* Prospective Faculty Section */
+.prospective-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 3rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-radius: 20px;
+    padding: 3rem;
+    border: 1px solid #e2e8f0;
+}
+
+.prospective-info h4 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+}
+
+.prospective-info p {
+    color: #64748b;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+}
+
+.prospective-highlights {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+.highlight-item {
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+.highlight-item i {
+    font-size: 3rem;
+    color: #2563eb;
+    margin-bottom: 1rem;
+}
+
+.highlight-item h5 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.highlight-item p {
+    color: #64748b;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.prospective-cta {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.prospective-cta h5 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+}
+
+.openings-list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 2rem;
+}
+
+.openings-list li {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #e2e8f0;
+    color: #64748b;
+    transition: color 0.3s ease;
+}
+
+.openings-list li:hover {
+    color: #2563eb;
+}
+
+.openings-list li:last-child {
+    border-bottom: none;
+}
+
+.cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+    color: white;
+    text-decoration: none;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
+}
+
+.cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
+}
+
+/* Responsive Design for People Page */
+@media (max-width: 1024px) {
+    .faculty-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
     }
+    
+    .staff-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .scholars-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+    
+    .prospective-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .prospective-highlights {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .people {
+        padding: 4rem 0 2rem;
+    }
+    
+    .subsection-title {
+        font-size: 1.6rem;
+        margin-bottom: 2rem;
+    }
+    
+    .faculty-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .scholars-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .staff-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 2rem;
+    }
+    
+    .staff-image {
+        margin-right: 0;
+        margin-bottom: 1rem;
+        width: 100px;
+        height: 100px;
+    }
+    
+    .prospective-content {
+        padding: 2rem;
+    }
+    
+    .prospective-highlights {
+        grid-template-columns: 1fr;
+    }
+}
 
     .map-tabs {
         justify-content: center;
@@ -1720,8 +2213,20 @@ section {
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .nav-links {
+        display: flex;
+        position: static;
+        background: transparent;
+        flex-direction: column;
+        padding: 0;
+        box-shadow: none;
+        width: auto;
+        top: auto;
+        left: auto;
+    }
+
+    .nav-links.mobile-hidden {
         display: none;
         position: absolute;
         top: 100%;
@@ -1731,10 +2236,6 @@ section {
         flex-direction: column;
         padding: 1rem;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    }
-
-    .nav-links.active {
-        display: flex;
     }
 
     .nav-toggle {
@@ -1767,7 +2268,6 @@ section {
 
     .about-section {
         padding: 1.5rem;
-        margin-bottom: 2rem;
     }
 
     .subsection-title {
