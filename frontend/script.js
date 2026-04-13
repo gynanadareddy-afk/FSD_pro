@@ -3,10 +3,19 @@ const navToggle = document.getElementById('navToggle');
 const navMenu = document.getElementById('navMenu');
 const navLinks = document.querySelectorAll('.nav-link');
 const contactForm = document.getElementById('contactForm');
-const apiBaseUrl = '/api';
+const apiBaseUrl = (() => {
+    // If the static site is served from a different dev server/port,
+    // default API calls to the backend dev server.
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const isBackendPort = window.location.port === '5000';
+    if (isLocalhost && !isBackendPort) return 'http://localhost:5000/api';
+    return '/api';
+})();
 
 function buildApiUrl(endpoint, query = {}) {
-    const url = new URL(`${apiBaseUrl}/${endpoint}`, window.location.origin);
+    const url = apiBaseUrl.startsWith('http')
+        ? new URL(`${apiBaseUrl}/${endpoint}`)
+        : new URL(`${apiBaseUrl}/${endpoint}`, window.location.origin);
     Object.entries(query).forEach(([key, value]) => {
         if (value !== undefined && value !== null && value !== '') {
             url.searchParams.set(key, value);
@@ -26,6 +35,8 @@ function showDataLoadError(containerId, message) {
 
 // Check screen size and set initial state
 function checkScreenSize() {
+    if (!navMenu || !navToggle) return;
+
     if (window.innerWidth <= 1024) {
         navMenu.classList.add('mobile-hidden');
         navToggle.style.display = 'flex';
@@ -42,26 +53,29 @@ checkScreenSize();
 window.addEventListener('resize', checkScreenSize);
 
 // Mobile Navigation Toggle
-navToggle.addEventListener('click', () => {
-    navMenu.classList.toggle('mobile-hidden');
-    
-    // Animate hamburger menu
-    const spans = navToggle.querySelectorAll('span');
-    spans.forEach((span, index) => {
-        if (navMenu.classList.contains('mobile-hidden')) {
-            if (index === 0) span.style.transform = 'rotate(45deg) translate(5px, 5px)';
-            if (index === 1) span.style.opacity = '0';
-            if (index === 2) span.style.transform = 'rotate(-45deg) translate(7px, -6px)';
-        } else {
-            span.style.transform = '';
-            span.style.opacity = '';
-        }
+if (navToggle && navMenu) {
+    navToggle.addEventListener('click', () => {
+        navMenu.classList.toggle('mobile-hidden');
+
+        // Animate hamburger menu
+        const spans = navToggle.querySelectorAll('span');
+        spans.forEach((span, index) => {
+            if (navMenu.classList.contains('mobile-hidden')) {
+                if (index === 0) span.style.transform = 'rotate(45deg) translate(5px, 5px)';
+                if (index === 1) span.style.opacity = '0';
+                if (index === 2) span.style.transform = 'rotate(-45deg) translate(7px, -6px)';
+            } else {
+                span.style.transform = '';
+                span.style.opacity = '';
+            }
+        });
     });
-});
+}
 
 // Close mobile menu when clicking on a link
 navLinks.forEach(link => {
     link.addEventListener('click', () => {
+        if (!navMenu || !navToggle) return;
         navMenu.classList.add('mobile-hidden');
         const spans = navToggle.querySelectorAll('span');
         spans.forEach(span => {
@@ -131,15 +145,24 @@ window.addEventListener('scroll', () => {
 // Fetch and display faculty data from database
 async function loadFaculty() {
     try {
+        // Only render dynamic faculty into the explicit container used on the home page.
+        // Other pages (like `people.html`) use `.faculty-grid` for static content.
+        const facultyGrid = document.getElementById('facultyGrid');
+        if (!facultyGrid) return;
+
         const response = await fetch(buildApiUrl('faculty'));
         const result = await response.json();
         
-        if (result.success) {
-            const facultyGrid = document.getElementById('facultyGrid');
-            if (facultyGrid) {
-                facultyGrid.innerHTML = '';
-                
-                result.data.forEach(member => {
+        if (result.success && result.data && result.data.faculty) {
+            const facultyData = result.data.faculty;
+            facultyGrid.innerHTML = '';
+            
+            if (facultyData.length === 0) {
+                facultyGrid.innerHTML = '<p class="data-error">No faculty members available</p>';
+                return;
+            }
+            
+            facultyData.forEach(member => {
                     const facultyCard = document.createElement('div');
                     facultyCard.className = 'faculty-card';
                     
@@ -165,8 +188,10 @@ async function loadFaculty() {
                         </div>
                     `;
                     facultyGrid.appendChild(facultyCard);
-                });
-            }
+            });
+        } else if (result.success && !result.data.faculty) {
+            // Handle unexpected response structure
+            facultyGrid.innerHTML = '<p class="data-error">Unable to load faculty data</p>';
         }
     } catch (error) {
         console.error('Error loading faculty:', error);
@@ -180,12 +205,12 @@ async function loadNews() {
         const response = await fetch(buildApiUrl('news', { limit: 3 }));
         const result = await response.json();
         
-        if (result.success) {
+        if (result.success && result.data && result.data.news) {
             const newsList = document.getElementById('newsList');
             if (newsList) {
                 newsList.innerHTML = '';
                 
-                result.data.forEach(item => {
+                result.data.news.forEach(item => {
                     const newsItem = document.createElement('div');
                     newsItem.className = 'news-item';
                     newsItem.innerHTML = `
@@ -209,12 +234,12 @@ async function loadEvents() {
         const response = await fetch(buildApiUrl('events', { limit: 3 }));
         const result = await response.json();
         
-        if (result.success) {
+        if (result.success && result.data && result.data.events) {
             const eventsList = document.getElementById('eventsList');
             if (eventsList) {
                 eventsList.innerHTML = '';
                 
-                result.data.forEach(event => {
+                result.data.events.forEach(event => {
                     const eventItem = document.createElement('div');
                     eventItem.className = 'event-item';
                     eventItem.innerHTML = `
@@ -284,14 +309,16 @@ const observerOptions = {
     rootMargin: '0px 0px -50px 0px'
 };
 
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-        }
-    });
-}, observerOptions);
+const observer = ('IntersectionObserver' in window)
+    ? new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions)
+    : null;
 
 // Observe all sections for scroll animations
 document.addEventListener('DOMContentLoaded', () => {
@@ -300,8 +327,25 @@ document.addEventListener('DOMContentLoaded', () => {
         section.style.opacity = '0';
         section.style.transform = 'translateY(30px)';
         section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(section);
+
+        if (observer) {
+            observer.observe(section);
+        } else {
+            // Fallback: never hide content if observer unsupported
+            section.style.opacity = '1';
+            section.style.transform = 'translateY(0)';
+        }
     });
+
+    // Safety net: if anything stays hidden, reveal it.
+    setTimeout(() => {
+        sections.forEach(section => {
+            if (getComputedStyle(section).opacity === '0') {
+                section.style.opacity = '1';
+                section.style.transform = 'translateY(0)';
+            }
+        });
+    }, 800);
     
     // Load data from API
     loadFaculty();
