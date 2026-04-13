@@ -568,21 +568,22 @@ section {
 }
 
 .lab-info h4 {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     color: #1e293b;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
 }
 
 .lab-info p {
+    font-size: 1.125rem;
     color: #475569;
-    line-height: 1.6;
+    line-height: 1.7;
 }
 
 .lab-features {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 10px;
+    gap: 12px;
+    margin-top: 12px;
 }
 
 /* Right side -> images (50%) */

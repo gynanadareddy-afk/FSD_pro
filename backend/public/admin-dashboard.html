@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - CSE Department</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: #f8f9fa;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .section-content {
+            padding: 1.5rem;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .data-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .data-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a6fd8;
+        }
+
+        .btn-success {
+            background: #51cf66;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+
+        .add-btn {
+            background: #51cf66;
+            color: white;
+        }
+
+        .add-btn:hover {
+            background: #40c057;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 2rem 0;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 0 auto;
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            cursor: grab;
+        }
+
+        .modal-content:active {
+            cursor: grabbing;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e9ecef;
+            cursor: grab;
+        }
+
+        .modal-header:active {
+            cursor: grabbing;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            flex: 1;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            color: #333;
+            background: #f0f0f0;
+            border-radius: 50%;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>CSE Department Admin Dashboard</h1>
+        <div class="header-actions">
+            <span id="admin-name">Admin</span>
+            <a href="/admin/profile" style="color: white; text-decoration: none; margin-right: 1rem;">Profile</a>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div id="error-message" class="error-message" style="display: none;"></div>
+        <div id="success-message" class="success-message" style="display: none;"></div>
+
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="faculty-count">0</div>
+                <div class="stat-label">Faculty Members</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="news-count">0</div>
+                <div class="stat-label">News Articles</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="events-count">0</div>
+                <div class="stat-label">Upcoming Events</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="courses-count">0</div>
+                <div class="stat-label">Courses</div>
+            </div>
+        </div>
+
+        <!-- Faculty Section -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Faculty Management</h2>
+                <button class="btn add-btn" onclick="openAddFacultyModal()">Add Faculty</button>
+            </div>
+            <div class="section-content">
+                <div id="faculty-loading" class="loading">Loading faculty data...</div>
+                <table class="data-table" id="faculty-table" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Designation</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="faculty-tbody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- News Section -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">News Management</h2>
+                <button class="btn add-btn" onclick="openAddNewsModal()">Add News</button>
+            </div>
+            <div class="section-content">
+                <div id="news-loading" class="loading">Loading news data...</div>
+                <table class="data-table" id="news-table" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Author</th>
+                            <th>Date</th>
+                            <th>Featured</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="news-tbody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Events Section -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Events Management</h2>
+                <button class="btn add-btn" onclick="openAddEventModal()">Add Event</button>
+            </div>
+            <div class="section-content">
+                <div id="events-loading" class="loading">Loading events data...</div>
+                <table class="data-table" id="events-table" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Type</th>
+                            <th>Date</th>
+                            <th>Venue</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="events-tbody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Courses Section -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Courses Management</h2>
+                <button class="btn add-btn" onclick="openAddCourseModal()">Add Course</button>
+            </div>
+            <div class="section-content">
+                <div id="courses-loading" class="loading">Loading courses data...</div>
+                <table class="data-table" id="courses-table" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Credits</th>
+                            <th>Semester</th>
+                            <th>Faculty</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="courses-tbody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Contact Messages Section -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Contact Messages</h2>
+            </div>
+            <div class="section-content">
+                <div id="contact-loading" class="loading">Loading contact messages...</div>
+                <table class="data-table" id="contact-table" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Message Type</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contact-tbody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="faculty-modal" class="modal">
+        <div class="modal-content" data-modal="faculty-modal">
+            <div class="modal-header" data-modal="faculty-modal">
+                <h2>Add Faculty</h2>
+                <button class="modal-close" onclick="closeModal('faculty-modal')">&times;</button>
+            </div>
+            <form id="faculty-form">
+                <div class="form-group">
+                    <label>First Name</label>
+                    <input type="text" name="first_name" required>
+                </div>
+                <div class="form-group">
+                    <label>Last Name</label>
+                    <input type="text" name="last_name" required>
+                </div>
+                <div class="form-group">
+                    <label>Designation</label>
+                    <input type="text" name="designation" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Bio</label>
+                    <textarea name="bio" required></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn" onclick="closeModal('faculty-modal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- News Modal -->
+    <div id="news-modal" class="modal">
+        <div class="modal-content" data-modal="news-modal">
+            <div class="modal-header" data-modal="news-modal">
+                <h2>Add News</h2>
+                <button class="modal-close" onclick="closeModal('news-modal')">&times;</button>
+            </div>
+            <form id="news-form">
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select name="category" required>
+                        <option value="">Select Category</option>
+                        <option value="Achievements">Achievements</option>
+                        <option value="Infrastructure">Infrastructure</option>
+                        <option value="Recruitment">Recruitment</option>
+                        <option value="Announcement">Announcement</option>
+                        <option value="General">General</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Author</label>
+                    <input type="text" name="author" required>
+                </div>
+                <div class="form-group">
+                    <label>Publish Date</label>
+                    <input type="date" name="publish_date" required>
+                </div>
+                <div class="form-group">
+                    <label>Content</label>
+                    <textarea name="content" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>News Type</label>
+                    <select name="news_type">
+                        <option value="general">General</option>
+                        <option value="announcement">Announcement</option>
+                        <option value="achievement">Achievement</option>
+                        <option value="event_update">Event Update</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Featured</label>
+                    <input type="checkbox" name="is_featured">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn" onclick="closeModal('news-modal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Events Modal -->
+    <div id="events-modal" class="modal">
+        <div class="modal-content" data-modal="events-modal">
+            <div class="modal-header" data-modal="events-modal">
+                <h2>Add Event</h2>
+                <button class="modal-close" onclick="closeModal('events-modal')">&times;</button>
+            </div>
+            <form id="events-form">
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label>Type</label>
+                    <select name="type" required>
+                        <option value="">Select Type</option>
+                        <option value="Workshop">Workshop</option>
+                        <option value="Seminar">Seminar</option>
+                        <option value="Competition">Competition</option>
+                        <option value="Guest Lecture">Guest Lecture</option>
+                        <option value="Conference">Conference</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Start Date</label>
+                    <input type="date" name="start_date" required>
+                </div>
+                <div class="form-group">
+                    <label>End Date</label>
+                    <input type="date" name="end_date" required>
+                </div>
+                <div class="form-group">
+                    <label>Venue</label>
+                    <input type="text" name="venue" required>
+                </div>
+                <div class="form-group">
+                    <label>Speaker</label>
+                    <input type="text" name="speaker" required>
+                </div>
+                <div class="form-group">
+                    <label>Organizer</label>
+                    <input type="text" name="organizer">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="description" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select name="status">
+                        <option value="upcoming">Upcoming</option>
+                        <option value="ongoing">Ongoing</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn" onclick="closeModal('events-modal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Courses Modal -->
+    <div id="courses-modal" class="modal">
+        <div class="modal-content" data-modal="courses-modal">
+            <div class="modal-header" data-modal="courses-modal">
+                <h2>Add Course</h2>
+                <button class="modal-close" onclick="closeModal('courses-modal')">&times;</button>
+            </div>
+            <form id="courses-form">
+                <div class="form-group">
+                    <label>Course Code</label>
+                    <input type="text" name="code" required>
+                </div>
+                <div class="form-group">
+                    <label>Course Name</label>
+                    <input type="text" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label>Credits</label>
+                    <input type="number" name="credits" required>
+                </div>
+                <div class="form-group">
+                    <label>Semester</label>
+                    <input type="text" name="semester" required>
+                </div>
+                <div class="form-group">
+                    <label>Faculty</label>
+                    <input type="text" name="faculty" required>
+                </div>
+                <div class="form-group">
+                    <label>Active</label>
+                    <input type="checkbox" name="is_active">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn" onclick="closeModal('courses-modal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Logout Confirmation Modal -->
+    <div id="logout-modal" class="modal">
+        <div class="modal-content" data-modal="logout-modal">
+            <div class="modal-header" data-modal="logout-modal">
+                <h2>Confirm Logout</h2>
+                <button class="modal-close" onclick="closeLogoutModal()">&times;</button>
+            </div>
+            <p style="margin-bottom: 1.5rem;">Are you sure you want to logout?</p>
+            <div class="form-actions">
+                <button type="button" class="btn" onclick="closeLogoutModal()">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="confirmLogout()">Yes, Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal dragging functionality
+        let dragElement = null;
+        let dragX = 0;
+        let dragY = 0;
+        let offsetX = 0;
+        let offsetY = 0;
+
+        function initDragModal() {
+            const headers = document.querySelectorAll('.modal-header');
+            headers.forEach(header => {
+                header.addEventListener('mousedown', (e) => {
+                    if (e.target.classList.contains('modal-close')) return;
+                    dragElement = header.closest('.modal-content');
+                    dragX = e.clientX;
+                    dragY = e.clientY;
+                    offsetX = dragElement.offsetLeft;
+                    offsetY = dragElement.offsetTop;
+                    dragElement.style.position = 'absolute';
+                    dragElement.style.margin = '0';
+                });
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (dragElement) {
+                    const modal = dragElement.closest('.modal');
+                    const newX = offsetX + (e.clientX - dragX);
+                    const newY = Math.max(0, offsetY + (e.clientY - dragY));
+                    dragElement.style.left = newX + 'px';
+                    dragElement.style.top = newY + 'px';
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                dragElement = null;
+            });
+        }
+
+        // Check authentication
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/admin/check-auth');
+                const data = await response.json();
+                
+                if (!data.authenticated) {
+                    window.location.href = '/admin/login';
+                    return false;
+                }
+                return true;
+            } catch (error) {
+                window.location.href = '/admin/login';
+                return false;
+            }
+        }
+
+        // Load dashboard data
+        async function loadDashboardData() {
+            try {
+                // Load statistics
+                const [faculty, news, events, courses] = await Promise.all([
+                    fetch('/api/faculty').then(r => r.json()),
+                    fetch('/api/news').then(r => r.json()),
+                    fetch('/api/events').then(r => r.json()),
+                    fetch('/api/courses').then(r => r.json())
+                ]);
+
+                // Update statistics
+                document.getElementById('faculty-count').textContent = faculty.data.pagination.total;
+                document.getElementById('news-count').textContent = news.data.pagination.total;
+                document.getElementById('events-count').textContent = events.data.pagination.total;
+                document.getElementById('courses-count').textContent = courses.data.pagination.total;
+
+                // Load tables
+                await loadFacultyTable(faculty.data.faculty);
+                await loadNewsTable(news.data.news);
+                await loadEventsTable(events.data.events);
+                await loadCoursesTable(courses.data.courses);
+                await loadContactTable();
+
+            } catch (error) {
+                showError('Failed to load dashboard data');
+            }
+        }
+
+        // Load faculty table
+        async function loadFacultyTable(faculty) {
+            const tbody = document.getElementById('faculty-tbody');
+            const table = document.getElementById('faculty-table');
+            const loading = document.getElementById('faculty-loading');
+            
+            tbody.innerHTML = '';
+            
+            faculty.forEach(member => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${member.first_name} ${member.last_name}</td>
+                    <td>${member.designation}</td>
+                    <td>${member.email}</td>
+                    <td><span class="status-badge ${member.is_active ? 'status-active' : 'status-inactive'}">${member.is_active ? 'Active' : 'Inactive'}</span></td>
+                    <td class="actions">
+                        <button class="btn btn-sm btn-primary" onclick="editFaculty('${member._id}')">Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteFaculty('${member._id}')">Delete</button>
+                    </td>
+                `;
+            });
+            
+            loading.style.display = 'none';
+            table.style.display = 'table';
+        }
+
+        // Load news table
+        async function loadNewsTable(news) {
+            const tbody = document.getElementById('news-tbody');
+            const table = document.getElementById('news-table');
+            const loading = document.getElementById('news-loading');
+            
+            tbody.innerHTML = '';
+            
+            news.forEach(item => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${item.title}</td>
+                    <td>${item.category}</td>
+                    <td>${item.author}</td>
+                    <td>${new Date(item.publish_date).toLocaleDateString()}</td>
+                    <td><span class="status-badge ${item.is_featured ? 'status-active' : 'status-inactive'}">${item.is_featured ? 'Featured' : 'Regular'}</span></td>
+                    <td class="actions">
+                        <button class="btn btn-sm btn-primary" onclick="editNews('${item._id}')">Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteNews('${item._id}')">Delete</button>
+                    </td>
+                `;
+            });
+            
+            loading.style.display = 'none';
+            table.style.display = 'table';
+        }
+
+        // Load events table
+        async function loadEventsTable(events) {
+            const tbody = document.getElementById('events-tbody');
+            const table = document.getElementById('events-table');
+            const loading = document.getElementById('events-loading');
+            
+            tbody.innerHTML = '';
+            
+            events.forEach(event => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${event.title}</td>
+                    <td>${event.type}</td>
+                    <td>${new Date(event.start_date).toLocaleDateString()}</td>
+                    <td>${event.venue}</td>
+                    <td><span class="status-badge status-active">${event.status}</span></td>
+                    <td class="actions">
+                        <button class="btn btn-sm btn-primary" onclick="editEvent('${event._id}')">Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteEvent('${event._id}')">Delete</button>
+                    </td>
+                `;
+            });
+            
+            loading.style.display = 'none';
+            table.style.display = 'table';
+        }
+
+        // Load courses table
+        async function loadCoursesTable(courses) {
+            const tbody = document.getElementById('courses-tbody');
+            const table = document.getElementById('courses-table');
+            const loading = document.getElementById('courses-loading');
+            
+            tbody.innerHTML = '';
+            
+            courses.forEach(course => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${course.code}</td>
+                    <td>${course.name}</td>
+                    <td>${course.credits}</td>
+                    <td>${course.semester}</td>
+                    <td>${course.faculty}</td>
+                    <td><span class="status-badge ${course.is_active ? 'status-active' : 'status-inactive'}">${course.is_active ? 'Active' : 'Inactive'}</span></td>
+                    <td class="actions">
+                        <button class="btn btn-sm btn-primary" onclick="editCourse('${course._id}')">Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteCourse('${course._id}')">Delete</button>
+                    </td>
+                `;
+            });
+            
+            loading.style.display = 'none';
+            table.style.display = 'table';
+        }
+
+        // Load contact messages table
+        async function loadContactTable() {
+            try {
+                const response = await fetch('/api/contact');
+                const data = await response.json();
+                
+                const tbody = document.getElementById('contact-tbody');
+                const table = document.getElementById('contact-table');
+                const loading = document.getElementById('contact-loading');
+                
+                tbody.innerHTML = '';
+
+                const messages = data && data.success && data.data && Array.isArray(data.data.messages)
+                    ? data.data.messages
+                    : [];
+
+                if (messages.length === 0) {
+                    loading.style.display = 'none';
+                    table.style.display = 'table';
+                    const row = tbody.insertRow();
+                    row.innerHTML = `<td colspan="6" style="text-align:center; color:#666; padding: 1.5rem;">No contact messages found</td>`;
+                    return;
+                }
+
+                messages.forEach(message => {
+                    const row = tbody.insertRow();
+                    row.innerHTML = `
+                        <td>${message.name}</td>
+                        <td>${message.email}</td>
+                        <td>${message.message_type}</td>
+                        <td>${new Date(message.createdAt).toLocaleDateString()}</td>
+                        <td><span class="status-badge status-active">${message.status || 'New'}</span></td>
+                        <td class="actions">
+                            <button class="btn btn-sm btn-primary" onclick="viewMessage('${message._id}')">View</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteMessage('${message._id}')">Delete</button>
+                        </td>
+                    `;
+                });
+                
+                loading.style.display = 'none';
+                table.style.display = 'table';
+            } catch (error) {
+                document.getElementById('contact-loading').innerHTML = 'Failed to load contact messages';
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Form submission
+        document.getElementById('faculty-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            const editId = e.target.dataset.editId;
+            
+            try {
+                const method = editId ? 'PUT' : 'POST';
+                const endpoint = editId ? `/api/faculty/${editId}` : '/api/faculty';
+                
+                const response = await fetch(endpoint, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showSuccess(editId ? 'Faculty member updated successfully' : 'Faculty member added successfully');
+                    closeModal('faculty-modal');
+                    e.target.reset();
+                    delete e.target.dataset.editId;
+                    loadDashboardData();
+                } else {
+                    showError(result.message || 'Failed to save faculty member');
+                }
+            } catch (error) {
+                showError('Network error occurred');
+            }
+        });
+
+        // News form submission
+        document.getElementById('news-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            data.is_featured = e.target.querySelector('input[name="is_featured"]').checked;
+            const editId = e.target.dataset.editId;
+            
+            try {
+                const method = editId ? 'PUT' : 'POST';
+                const endpoint = editId ? `/api/news/${editId}` : '/api/news';
+                
+                const response = await fetch(endpoint, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showSuccess(editId ? 'News updated successfully' : 'News added successfully');
+                    closeModal('news-modal');
+                    e.target.reset();
+                    delete e.target.dataset.editId;
+                    loadDashboardData();
+                } else {
+                    showError(result.message || 'Failed to save news');
+                }
+            } catch (error) {
+                showError('Network error occurred');
+            }
+        });
+
+        // Events form submission
+        document.getElementById('events-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            const editId = e.target.dataset.editId;
+            
+            try {
+                const method = editId ? 'PUT' : 'POST';
+                const endpoint = editId ? `/api/events/${editId}` : '/api/events';
+                
+                const response = await fetch(endpoint, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showSuccess(editId ? 'Event updated successfully' : 'Event added successfully');
+                    closeModal('events-modal');
+                    e.target.reset();
+                    delete e.target.dataset.editId;
+                    loadDashboardData();
+                } else {
+                    showError(result.message || 'Failed to save event');
+                }
+            } catch (error) {
+                showError('Network error occurred');
+            }
+        });
+
+        // Courses form submission
+        document.getElementById('courses-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            data.is_active = e.target.querySelector('input[name="is_active"]').checked;
+            const editId = e.target.dataset.editId;
+            
+            try {
+                const method = editId ? 'PUT' : 'POST';
+                const endpoint = editId ? `/api/courses/${editId}` : '/api/courses';
+                
+                const response = await fetch(endpoint, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showSuccess(editId ? 'Course updated successfully' : 'Course added successfully');
+                    closeModal('courses-modal');
+                    e.target.reset();
+                    delete e.target.dataset.editId;
+                    loadDashboardData();
+                } else {
+                    showError(result.message || 'Failed to save course');
+                }
+            } catch (error) {
+                showError('Network error occurred');
+            }
+        });
+
+        // Utility functions
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('success-message');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function logout() {
+            // Show custom confirmation modal
+            document.getElementById('logout-modal').style.display = 'block';
+        }
+
+        function closeLogoutModal() {
+            document.getElementById('logout-modal').style.display = 'none';
+        }
+
+        async function confirmLogout() {
+            try {
+                await fetch('/api/admin/logout', { method: 'POST' });
+                window.location.href = '/admin/login';
+            } catch (error) {
+                window.location.href = '/admin/login';
+            }
+        }
+
+        // Placeholder functions
+        async function editFaculty(id) { 
+            try {
+                const response = await fetch(`/api/faculty/${id}`);
+                const data = await response.json();
+                if (data.success) {
+                    openAddFacultyModal(id); // Pass id to indicate edit mode
+                    const form = document.getElementById('faculty-form');
+                    const inputs = form.querySelectorAll('input, textarea');
+                    const member = data.data;
+                    inputs.forEach(input => {
+                        const key = input.name;
+                        if (member[key]) input.value = member[key];
+                    });
+                    form.dataset.editId = id;
+                    document.querySelector('#faculty-modal h2').textContent = 'Edit Faculty';
+                }
+            } catch (error) {
+                showError('Failed to load faculty data');
+            }
+        }
+        
+        async function deleteFaculty(id) { 
+            if (confirm('Are you sure you want to delete this faculty member?')) {
+                try {
+                    const response = await fetch(`/api/faculty/${id}`, { method: 'DELETE' });
+                    const data = await response.json();
+                    if (data.success) {
+                        showSuccess('Faculty member deleted successfully');
+                        loadDashboardData();
+                    }
+                } catch (error) {
+                    showError('Failed to delete faculty member');
+                }
+            }
+        }
+        
+        async function editNews(id) { 
+            try {
+                const response = await fetch(`/api/news/${id}`);
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('news-modal').style.display = 'block';
+                    const form = document.getElementById('news-form');
+                    const inputs = form.querySelectorAll('input, textarea, select');
+                    const news = data.data;
+                    inputs.forEach(input => {
+                        const key = input.name;
+                        if (key === 'is_featured') {
+                            input.checked = news[key];
+                        } else if (news[key]) {
+                            if (key === 'publish_date' && typeof news[key] === 'string') {
+                                input.value = news[key].split('T')[0];
+                            } else {
+                                input.value = news[key];
+                            }
+                        }
+                    });
+                    form.dataset.editId = id;
+                    document.querySelector('#news-modal h2').textContent = 'Edit News';
+                    initDragModal();
+                }
+            } catch (error) {
+                showError('Failed to load news data');
+            }
+        }
+        
+        async function deleteNews(id) {  
+            if (confirm('Are you sure you want to delete this news?')) {
+                try {
+                    const response = await fetch(`/api/news/${id}`, { method: 'DELETE' });
+                    const data = await response.json();
+                    if (data.success) {
+                        showSuccess('News deleted successfully');
+                        loadDashboardData();
+                    }
+                } catch (error) {
+                    showError('Failed to delete news');
+                }
+            }
+        }
+        
+        async function editEvent(id) { 
+            try {
+                const response = await fetch(`/api/events/${id}`);
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('events-modal').style.display = 'block';
+                    const form = document.getElementById('events-form');
+                    const inputs = form.querySelectorAll('input, textarea, select');
+                    const event = data.data;
+                    inputs.forEach(input => {
+                        const key = input.name;
+                        if (event[key]) {
+                            if ((key === 'start_date' || key === 'end_date') && typeof event[key] === 'string') {
+                                input.value = event[key].split('T')[0];
+                            } else {
+                                input.value = event[key];
+                            }
+                        }
+                    });
+                    form.dataset.editId = id;
+                    document.querySelector('#events-modal h2').textContent = 'Edit Event';
+                    initDragModal();
+                }
+            } catch (error) {
+                showError('Failed to load event data');
+            }
+        }
+        
+        async function deleteEvent(id) { 
+            if (confirm('Are you sure you want to delete this event?')) {
+                try {
+                    const response = await fetch(`/api/events/${id}`, { method: 'DELETE' });
+                    const data = await response.json();
+                    if (data.success) {
+                        showSuccess('Event deleted successfully');
+                        loadDashboardData();
+                    }
+                } catch (error) {
+                    showError('Failed to delete event');
+                }
+            }
+        }
+        
+        async function editCourse(id) { 
+            try {
+                const response = await fetch(`/api/courses/${id}`);
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('courses-modal').style.display = 'block';
+                    const form = document.getElementById('courses-form');
+                    const inputs = form.querySelectorAll('input, textarea, select');
+                    const course = data.data;
+                    inputs.forEach(input => {
+                        const key = input.name;
+                        if (key === 'is_active') {
+                            input.checked = course[key];
+                        } else if (course[key]) {
+                            input.value = course[key];
+                        }
+                    });
+                    form.dataset.editId = id;
+                    document.querySelector('#courses-modal h2').textContent = 'Edit Course';
+                    initDragModal();
+                }
+            } catch (error) {
+                showError('Failed to load course data');
+            }
+        }
+        
+        async function deleteCourse(id) { 
+            if (confirm('Are you sure you want to delete this course?')) {
+                try {
+                    const response = await fetch(`/api/courses/${id}`, { method: 'DELETE' });
+                    const data = await response.json();
+                    if (data.success) {
+                        showSuccess('Course deleted successfully');
+                        loadDashboardData();
+                    }
+                } catch (error) {
+                    showError('Failed to delete course');
+                }
+            }
+        }
+        
+        function viewMessage(id) { 
+            showError('Feature under development');
+        }
+        
+        async function deleteMessage(id) { 
+            if (confirm('Are you sure you want to delete this message?')) {
+                try {
+                    const response = await fetch(`/api/contact/${id}`, { method: 'DELETE' });
+                    const data = await response.json();
+                    if (data.success) {
+                        showSuccess('Message deleted successfully');
+                        loadContactTable();
+                    }
+                } catch (error) {
+                    showError('Failed to delete message');
+                }
+            }
+        }
+        
+        function openAddFacultyModal(editId = null) {
+            document.getElementById('faculty-modal').style.display = 'block';
+            if (!editId) {
+                document.querySelector('#faculty-modal h2').textContent = 'Add Faculty';
+                document.getElementById('faculty-form').dataset.editId = '';
+                document.getElementById('faculty-form').reset();
+            }
+            initDragModal();
+        }
+        
+        function openAddNewsModal() { 
+            document.getElementById('news-modal').style.display = 'block';
+            document.querySelector('#news-modal h2').textContent = 'Add News';
+            document.getElementById('news-form').dataset.editId = '';
+            document.getElementById('news-form').reset();
+            initDragModal();
+        }
+        
+        function openAddEventModal() { 
+            document.getElementById('events-modal').style.display = 'block';
+            document.querySelector('#events-modal h2').textContent = 'Add Event';
+            document.getElementById('events-form').dataset.editId = '';
+            document.getElementById('events-form').reset();
+            initDragModal();
+        }
+        
+        function openAddCourseModal() { 
+            document.getElementById('courses-modal').style.display = 'block';
+            document.querySelector('#courses-modal h2').textContent = 'Add Course';
+            document.getElementById('courses-form').dataset.editId = '';
+            document.getElementById('courses-form').reset();
+            initDragModal();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            initDragModal(); // Initialize drag functionality for all modals
+            if (await checkAuth()) {
+                await loadDashboardData();
+            }
+        });
+    </script>
+</body>
+</html>
